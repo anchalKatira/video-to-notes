@@ -141,10 +141,17 @@ st.set_page_config(page_title="Video to Notes", page_icon="📝", layout="center
 st.title("📝 YouTube Video → Notes PDF")
 st.caption("Paste one video link. Get back a summary, key terms, and takeaways as a PDF.")
 
-default_key = st.secrets.get("GROQ_API_KEY", "") if hasattr(st, "secrets") else ""
-with st.sidebar:
-    st.header("Settings")
-    api_key = st.text_input("Groq API key", value=default_key, type="password")
+secret_key = st.secrets.get("GROQ_API_KEY", "") if hasattr(st, "secrets") else ""
+
+if secret_key:
+    # A key is already configured server-side (Streamlit Cloud secret) --
+    # use it silently. Never render it in a field, even a masked/revealable one.
+    api_key = secret_key
+else:
+    # No secret configured (e.g. running locally without one) -- ask for it.
+    with st.sidebar:
+        st.header("Settings")
+        api_key = st.text_input("Groq API key", type="password")
 
 video_url = st.text_input("YouTube video URL", placeholder="https://www.youtube.com/watch?v=...")
 run_button = st.button("Generate notes", type="primary", disabled=not (video_url and api_key))
