@@ -14,6 +14,7 @@ import json
 import os
 import re
 import tempfile
+from xml.sax.saxutils import escape
 
 import streamlit as st
 from groq import Groq
@@ -97,6 +98,39 @@ def generate_notes(client: Groq, transcript: str) -> dict:
     return json.loads(response.choices[0].message.content)
 
 
+def clean_for_pdf(text: str) -> str:
+    """
+    Makes model-generated text safe to drop into a ReportLab Paragraph.
+
+    Two separate problems this fixes:
+    1. ReportLab's default fonts (Helvetica etc.) use WinAnsi encoding, which
+       is missing glyphs for several Unicode punctuation marks LLMs commonly
+       produce (non-breaking hyphens, minus signs, soft hyphens, etc.) --
+       those render as a black "missing glyph" box instead of a hyphen.
+       Fix: normalize them to plain ASCII equivalents first.
+    2. Paragraph text is parsed as a small XML/HTML-like markup language, so
+       a raw '&', '<', or '>' in model output (e.g. "AT&T", "a < b") can
+       break rendering or even raise a parse error. Fix: XML-escape the text
+       AFTER normalizing punctuation, so our own <b> tags (added separately)
+       are unaffected.
+    """
+    punctuation_map = {
+        "\u2010": "-", "\u2011": "-", "\u2012": "-", "\u2013": "-",  # hyphen/dash variants
+        "\u2014": "--", "\u2212": "-", "\u00ad": "-",                 # em dash, minus sign, soft hyphen
+        "\u2018": "'", "\u2019": "'",                                  # smart single quotes
+        "\u201c": '"', "\u201d": '"',                                  # smart double quotes
+        "\u2026": "...", "\u00a0": " ",                                # ellipsis, non-breaking space
+    }
+    for old, new in punctuation_map.items():
+        text = text.replace(old, new)
+
+    # Catch-all: anything still outside WinAnsi gets swapped for '?' instead
+    # of silently producing a missing-glyph box.
+    text = text.encode("cp1252", errors="replace").decode("cp1252")
+
+    return escape(text)
+
+
 def build_pdf(video_title: str, video_url: str, notes: dict, output_path: str):
     doc = SimpleDocTemplate(
         output_path, pagesize=LETTER,
@@ -110,24 +144,27 @@ def build_pdf(video_title: str, video_url: str, notes: dict, output_path: str):
     meta_style = ParagraphStyle("Meta", parent=styles["Normal"], fontSize=9, textColor=colors.grey, spaceAfter=14)
 
     story = [
-        Paragraph(video_title, title_style),
+        Paragraph(clean_for_pdf(video_title), title_style),
         Paragraph(f'<link href="{video_url}">{video_url}</link>', meta_style),
         HRFlowable(width="100%", color=colors.HexColor("#dddddd")),
         Spacer(1, 10),
         Paragraph("Summary", section_style),
-        Paragraph(notes.get("summary", ""), body_style),
+        Paragraph(clean_for_pdf(notes.get("summary", "")), body_style),
     ]
 
     key_terms = notes.get("key_terms", [])
     if key_terms:
         story.append(Paragraph("Key Terms", section_style))
-        items = [ListItem(Paragraph(f"<b>{kt.get('term','')}</b> — {kt.get('definition','')}", body_style)) for kt in key_terms]
+        items = [
+            ListItem(Paragraph(f"<b>{clean_for_pdf(kt.get('term',''))}</b> — {clean_for_pdf(kt.get('definition',''))}", body_style))
+            for kt in key_terms
+        ]
         story.append(ListFlowable(items, bulletType="bullet", leftIndent=16))
 
     takeaways = notes.get("takeaways", [])
     if takeaways:
         story.append(Paragraph("Highlighted Takeaways", section_style))
-        items = [ListItem(Paragraph(t, body_style)) for t in takeaways]
+        items = [ListItem(Paragraph(clean_for_pdf(t), body_style)) for t in takeaways]
         story.append(ListFlowable(items, bulletType="bullet", leftIndent=16))
 
     doc.build(story)
