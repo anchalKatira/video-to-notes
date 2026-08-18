@@ -9,7 +9,7 @@ Paste a link, get back a **summary**, **key term definitions**, and **highlighte
 ![Groq](https://img.shields.io/badge/LLM-Groq%20Llama%203.3-orange)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-🔗 **Live demo:** [video-to-notes.streamlit.app](https://video-to-notes.streamlit.app) <!-- replace with your actual deployed URL once live -->
+🔗 **Live demo:** [video-to-notes.streamlit.app](https://video-to-notes-hpvrukwigrrh2hzotp6rb7.streamlit.app/) 
 
 ---
 
