@@ -32,7 +32,7 @@ from reportlab.lib import colors
 # Config
 # ---------------------------------------------------------------------------
 
-MODEL = "llama-3.3-70b-versatile"
+MODEL = "openai/gpt-oss-120b"
 MAX_TRANSCRIPT_CHARS = 100_000
 
 NOTES_SYSTEM_PROMPT = """You are an expert note-taker. You will be given the \
