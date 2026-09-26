@@ -56,7 +56,7 @@ YouTube URL
 [ youtube-transcript-api ]  →  raw transcript text
     │
     ▼
-[ Groq API — Llama 3.3 70B ]  →  structured JSON
+[ Groq API — GPT-OSS-120B ]  →  structured JSON
     │                              { summary, key_terms, takeaways }
     ▼
 [ reportlab ]  →  formatted PDF
@@ -119,14 +119,11 @@ The app opens at `http://localhost:8501`. No key saved locally? Just paste it in
 - **Captions required:** videos with no captions at all (manual or auto-generated) can't be processed.
 - **Single video at a time:** no batch/playlist support in this version — built as a focused, defensible single-purpose tool.
 
-## Roadmap
+## Next steps
 
 - [ ] Wire in Webshare proxy support to eliminate the IP rate-limit risk
 - [ ] Add exponential backoff/retry on transient API failures
 - [ ] Playlist mode (batch-process every video in a playlist into one combined PDF)
 - [ ] Cache results in session state so re-rendering the PDF doesn't require re-calling the LLM
 
-## Author
 
-**Anchal Katira** — B.Tech CSE (AI & ML), VIT Bhopal
-[GitHub](https://github.com/anchalKatira)
