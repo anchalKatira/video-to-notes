@@ -19,8 +19,7 @@ Paste a link, get back a **summary**, **key term definitions**, and **highlighte
 - [Deploying it yourself](#deploying-it-yourself)
 - [Project structure](#project-structure)
 - [Known limitations](#known-limitations)
-- [Roadmap](#roadmap)
-- [Author](#author)
+- [Next steps](#next-steps)
 
 ## Demo
 
