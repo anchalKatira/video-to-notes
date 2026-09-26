@@ -70,7 +70,7 @@ Streamlit UI  →  download button
 | Layer | Tool | Why |
 |---|---|---|
 | Transcript fetch | [`youtube-transcript-api`](https://github.com/jdepoix/youtube-transcript-api) | Pulls captions directly from YouTube, no API key or auth required |
-| LLM summarization | **Groq API** (Llama 3.3 70B) | Fast inference; uses Groq's native `response_format={"type": "json_object"}` to force valid structured output at the API level, rather than just prompting for JSON |
+| LLM summarization | **Groq API** (GPT-OSS-120B) | Fast inference; uses Groq's native `response_format={"type": "json_object"}` to force valid structured output at the API level, rather than just prompting for JSON |
 | PDF generation | [`reportlab`](https://www.reportlab.com/) | Pure-Python flowable-based layout — builds the document as a stream of styled sections, no manual coordinate math |
 | UI | [`streamlit`](https://streamlit.io/) | Turns the pipeline into a usable web app with minimal frontend code |
 | Hosting | **Streamlit Community Cloud** | Free, GitHub-connected deployment with built-in secrets management |
