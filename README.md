@@ -4,11 +4,6 @@ Turn any YouTube video into structured, downloadable study notes — automatical
 
 Paste a link, get back a **summary**, **key term definitions**, and **highlighted takeaways** as a clean PDF — generated end-to-end by an LLM pipeline. No manual copy-pasting into a chatbot, no reformatting: one input, one file out.
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue)
-![Streamlit](https://img.shields.io/badge/Streamlit-app-ff4b4b)
-![Groq](https://img.shields.io/badge/LLM-Groq%20Llama%203.3-orange)
-![License](https://img.shields.io/badge/license-MIT-green)
-
 🔗 **Live demo:** [video-to-notes.streamlit.app](https://video-to-notes-hpvrukwigrrh2hzotp6rb7.streamlit.app/) 
 
 ---
